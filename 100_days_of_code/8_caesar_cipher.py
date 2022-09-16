@@ -43,36 +43,10 @@ alphabet = [
     "x",
     "y",
     "z",
-    "a",
-    "b",
-    "c",
-    "d",
-    "e",
-    "f",
-    "g",
-    "h",
-    "i",
-    "j",
-    "k",
-    "l",
-    "m",
-    "n",
-    "o",
-    "p",
-    "q",
-    "r",
-    "s",
-    "t",
-    "u",
-    "v",
-    "w",
-    "x",
-    "y",
-    "z",
 ]
 
 
-def caesar(start_text, shift_amount, cipher_direction):
+def caesar(start_text: str, shift_amount: int, cipher_direction: str) -> str:
     end_text = ""
     if cipher_direction == "decode":
         shift_amount *= -1
@@ -87,10 +61,7 @@ def caesar(start_text, shift_amount, cipher_direction):
     return end_text
 
 
-# TODO-4: Can you figure out a way to ask the user if they want to restart the cipher program?
-
-
-def confirm_restart():
+def confirm_restart() -> bool:
     confirm = input("Type 'yes' if you want to go again. Otherwise type 'no'.\n")
     if confirm == "yes":
         return True
@@ -98,50 +69,77 @@ def confirm_restart():
     return False
 
 
-# e.g. Type 'yes' if you want to go again. Otherwise type 'no'.
-# If they type 'yes' then ask them for the direction/text/shift again and call the caesar() function again?
-# Hint: Try creating a while loop that continues to execute the program if the user types 'yes'.
-
-
-# TODO-2: What if the user enters a shift that is greater than the number of letters in the alphabet?
-# Try running the program and entering a shift number of 45.
-# Add some code so that the program continues to work even if the user enters a shift number greater than 26.
-# Hint: Think about how you can use the modulus (%).
-
-
-def main() -> None:
-    print(logo)
+def get_direction() -> str:
     restart = True
-    valid_shift = True
 
     while restart:
-        direction = input("Type 'encode' to encrypt, type 'decode' to decrypt:\n")
+        valid = ["encode", "decode"]
+
+        direction = input(
+            "Type 'encode' to encrypt, type 'decode' to decrypt:\n"
+        ).lower()
+        print()
+
+        if direction in valid:
+            restart = False
+
         if direction == "restart":
             confirmed = confirm_restart()
             if not confirmed:
                 restart = False
-                continue
+
+    return direction
+
+
+def get_text() -> str:
+    restart = True
 
     while restart:
         text = input("Type your message:\n").lower()
+        print()
         if text == "restart":
             confirmed = confirm_restart()
             if not confirmed:
                 restart = False
-                continue
-            
-    while restart:
-        while not valid_shift:
-            shift = int(input("Type the shift number:\n"))
-            if shift == "restart":
-                confirmed = confirm_restart()
-                if not confirmed:
-                    break
-
-            if not shift > len(alphabet):
-                valid_shift = True
-
         restart = False
+
+    return text
+
+
+def valid_shift(text: str, shift: int) -> bool:
+    try:
+        shift = int(shift)
+        for letter in text:
+            if (alphabet.index(letter)) + shift > len(alphabet):
+                return False
+        return True
+    except:
+        return False
+
+
+""" 
+TODO: 
+find a way to loop indexing through alphabet if shift + letterindex > 26
+"""
+
+
+def get_shift(text: str) -> int:
+    restart = True
+
+    while restart:
+        shift = input("Type the shift number:\n")
+        print()
+        valid = valid_shift(text, shift)
+        if valid:
+            return int(shift)
+
+
+def main() -> None:
+    print(logo)
+
+    direction = get_direction()
+    text = get_text()
+    shift = get_shift(text)
 
     end_text = caesar(text, shift, direction)
     print(f"Here's the {direction}d result: {end_text}\n")
