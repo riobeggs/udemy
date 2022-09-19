@@ -2,6 +2,7 @@ import random
 import sys
 
 
+# complete
 def intro() -> str:
     """
     Blackjack ascii art and game start.
@@ -26,6 +27,7 @@ def intro() -> str:
     return logo
 
 
+# continue
 def draw_card() -> int:
     available_cards = [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
 
@@ -34,13 +36,14 @@ def draw_card() -> int:
     return distributed_card
 
 
+# complete
 def hit() -> bool:
-    selection_is_valid = False
+    selection_is_not_valid = True
 
-    while not selection_is_valid:
+    while selection_is_not_valid:
         selection = input("Type 'y' to get another card, type 'n' to pass: ")
         if selection == "y" or selection == "n":
-            break
+            selection_is_not_valid = False
 
     if selection == "y":
         return True
@@ -49,15 +52,40 @@ def hit() -> bool:
         return False
 
 
-def calculate_cards(user, computer) -> list:
+# complete
+def status(user: list, computer: list, final: bool) -> str:
+    if final:
+        return f"""
+Your final hand: {user}
+Computer's final hand: {computer}
+        """
+
+    if len(computer) == 1:
+        return f"""
+Your cards: {user}
+Computer's first card: {computer[0]}
+        """
+
+    return f"""
+Your cards: {user}
+Computer's cards: {computer}
+    """
+
+
+# complete
+def calculate_cards(user: list, computer: list) -> list:
     total = []
 
     user = int(sum(user))
     computer = int(sum(computer))
 
+    total.append(user)
+    total.append(computer)
+
     return total
 
 
+# complete
 def determine_winner(calculate_cards: list) -> str:
     user = calculate_cards[0]
     computer = calculate_cards[1]
@@ -66,47 +94,77 @@ def determine_winner(calculate_cards: list) -> str:
         return "lose."
 
     if user <= 21 and computer > 21:
-        return "win." 
+        return "win."
 
     if user <= 21 and computer <= 21:
         if user == computer:
             return "drew."
 
+        if user > computer:
+            return "win."
 
-def user() -> list:
-    card_list = []
-    play = True
+        if user < computer:
+            return "lose."
 
-    for i in range(0, 2):
-        card = draw_card()
-        card_list.append(card)
-
-    print(f"Your cards: {card_list}")
-
-    while play:
-        take_card = hit()
-        if not take_card:
-            break
-
-        card = draw_card()
-        card_list.append(card)
-
-    return card_list
+    if user > 21 and computer > 21:
+        return "drew."
 
 
-def computer() -> list:
-    card_list = []
-    card = draw_card()
-    card_list.append(card)
-
-    return card_list
-
-
+# TODO optimize/ refactor
 def main() -> None:
+    computers_cards = []
+    users_cards = []
+    play = True
+    final = False
+
     print(intro())
 
-    run = user()
-    print(run)    
+    while play:
+        # if the game has just started:
+        if len(users_cards) == 0:
+            for i in range(2):
+                user = draw_card()
+                users_cards.append(user)
+
+            computer = draw_card()
+            computers_cards.append(computer)
+
+            print(status(users_cards, computers_cards, final))
+
+        # ask if user wants to draw card:
+        play = hit()
+
+        # if the user doesnt want to draw another card:
+        if not play:
+            while int(sum(computers_cards)) <= 16:
+                computer = draw_card()
+                computers_cards.append(computer)
+            final = True
+            break
+
+        # if user decides to draw another card:
+        user = draw_card()
+        users_cards.append(user)
+
+        if not int(sum(computers_cards)) > 15:
+            computer = draw_card()
+            computers_cards.append(computer)
+
+        if int(sum(users_cards)) > 21:
+            # TODO if over 21, change 11 to 1
+            if 11 in users_cards:
+                # users_cards[] = 1
+                continue
+            final = True
+            break
+
+        print(status(users_cards, computers_cards, final))
+
+    calculate_score = calculate_cards(users_cards, computers_cards)
+    result = determine_winner(calculate_score)
+
+    print(status(users_cards, computers_cards, final))
+    print(f"You {result}")
 
 
 if __name__ == "__main__":
