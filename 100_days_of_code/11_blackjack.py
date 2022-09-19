@@ -146,10 +146,12 @@ def main() -> None:
         user = draw_card()
         users_cards.append(user)
 
+        # if computers cards add to below 16, it draws another card
         if not int(sum(computers_cards)) > 15:
             computer = draw_card()
             computers_cards.append(computer)
 
+        # if the users cards add to above 21, if they have an 11, change the value to 1 instead.
         if int(sum(users_cards)) > 21:
             if 11 in users_cards:
                 ace_index = users_cards.index(11)
