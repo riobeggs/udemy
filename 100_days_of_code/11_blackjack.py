@@ -37,7 +37,7 @@ def draw_card() -> int:
 
 
 # complete
-def hit() -> bool:
+def hit_or_stand() -> bool:
     selection_is_not_valid = True
 
     while selection_is_not_valid:
@@ -53,7 +53,7 @@ def hit() -> bool:
 
 
 # complete
-def status(user: list, computer: list, final: bool) -> str:
+def game_status(user: list, computer: list, final: bool) -> str:
     if final:
         return f"""
 Your final hand: {user}
@@ -73,7 +73,7 @@ Computer's cards: {computer}
 
 
 # complete
-def calculate_cards(user: list, computer: list) -> list:
+def calculate_card_values(user: list, computer: list) -> list:
     total = []
 
     user = int(sum(user))
@@ -86,9 +86,9 @@ def calculate_cards(user: list, computer: list) -> list:
 
 
 # complete
-def determine_winner(calculate_cards: list) -> str:
-    user = calculate_cards[0]
-    computer = calculate_cards[1]
+def determine_winner(calculate_card_values: list) -> str:
+    user = calculate_card_values[0]
+    computer = calculate_card_values[1]
 
     if user > 21 and computer <= 21:
         return "lose."
@@ -129,10 +129,10 @@ def main() -> None:
             computer = draw_card()
             computers_cards.append(computer)
 
-            print(status(users_cards, computers_cards, final))
+            print(game_status(users_cards, computers_cards, final))
 
         # ask if user wants to draw card:
-        play = hit()
+        play = hit_or_stand()
 
         # if the user doesnt want to draw another card:
         if not play:
@@ -151,19 +151,19 @@ def main() -> None:
             computers_cards.append(computer)
 
         if int(sum(users_cards)) > 21:
-            # TODO if over 21, change 11 to 1
             if 11 in users_cards:
-                # users_cards[] = 1
+                ace_index = users_cards.index(11)
+                users_cards[ace_index] = 1
                 continue
             final = True
             break
 
-        print(status(users_cards, computers_cards, final))
+        print(game_status(users_cards, computers_cards, final))
 
-    calculate_score = calculate_cards(users_cards, computers_cards)
+    calculate_score = calculate_card_values(users_cards, computers_cards)
     result = determine_winner(calculate_score)
 
-    print(status(users_cards, computers_cards, final))
+    print(game_status(users_cards, computers_cards, final))
     print(f"You {result}")
 
 
