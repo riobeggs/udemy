@@ -152,23 +152,26 @@ def main() -> None:
             computers_cards.append(computer)
 
         # if the users or computers cards add to above 21, if they have an 11, change the value to 1 instead.
-        if int(sum(users_cards)) > 21:
-            if 11 in users_cards:
-                ace_index = users_cards.index(11)
-                users_cards[ace_index] = 1
-                if int(sum(computers_cards)) > 21:
-                    if 11 in computers_cards:
-                        ace_index = computers_cards.index(11)
-                        computers_cards[ace_index] = 1
+        # if int(sum(users_cards)) > 21 or int(sum(computers_cards)) > 21:
+        #     if int(sum(users_cards)) > 21:
+        #         while int(sum(users_cards)) > 21:
+        #             if 11 in users_cards:
+        #                 ace_index = users_cards.index(11)
+        #                 users_cards[ace_index] = 1
+        #             break
+        #     if int(sum(computers_cards)) > 21:
+        #         while int(sum(computers_cards)) > 21:
+        #             if 11 in computers_cards:
+        #                 ace_index = computers_cards.index(11)
+        #                 computers_cards[ace_index] = 1
+        #             break
 
-                        print(game_status(users_cards, computers_cards, final))
-                        continue
-
-                print(game_status(users_cards, computers_cards, final))
-                continue
-
-            final = True
-            break
+        #         print(game_status(users_cards, computers_cards, final))
+        #         continue
+            
+        #     continue
+        #     final = True
+        #     break
 
         print(game_status(users_cards, computers_cards, final))
 
