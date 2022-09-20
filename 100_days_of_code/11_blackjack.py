@@ -46,7 +46,7 @@ def hit_or_stand() -> bool:
     VALID_SELECTIONS = ["y", "n"]
     selection_is_valid = False
 
-    while selection_is_valid:
+    while not selection_is_valid:
         selection = input("Type 'y' to get another card, type 'n' to pass: ").lower()
         selection_is_valid = selection in VALID_SELECTIONS
 
@@ -126,28 +126,26 @@ def determine_winner(calculate_card_values: list) -> str:
 
 # TODO optimize/ refactor
 def main() -> None:
-    # TODO: call cards hands
     # TODO: Move this state variables into a game object
-    computers_cards = []
-    users_cards = []
+    computers_hand = []
+    users_hand = []
     play = True
     # TODO: Lets try remove the final boolean and rely on play
-    final = False
 
     print(intro())
 
     while play:
         # if the game has just started:
-        if len(users_cards) == 0:
+        if len(users_hand) == 0:
             for i in range(2):
                 user = draw_card()
-                users_cards.append(user)
+                users_hand.append(user)
 
             # TODO: rename computer to be more descriptive
             computer = draw_card()
-            computers_cards.append(computer)
+            computers_hand.append(computer)
 
-            print(game_status(users_cards, computers_cards, final))
+            print(game_status(users_hand, computers_hand, not play))
 
         # ask if user wants to draw card:
         play = hit_or_stand()
@@ -156,58 +154,56 @@ def main() -> None:
         if not play:
             # TODO: make 16 a special variable
             # TODO: create a function for drawing for a player
-            while int(sum(computers_cards)) <= 16:
+            while int(sum(computers_hand)) <= 16:
                 computer = draw_card()
-                computers_cards.append(computer)
-            final = True
+                computers_hand.append(computer)
             break
 
         # if user decides to draw another card:
         # TODO: rename user to be more descriptive
         user = draw_card()
-        users_cards.append(user)
+        users_hand.append(user)
 
         # if computers cards add to below 16, it draws another card
-        if not int(sum(computers_cards)) > 15:
+        if not int(sum(computers_hand)) > 15:
             computer = draw_card()
-            computers_cards.append(computer)
+            computers_hand.append(computer)
 
         # if the users or computers cards add to above 21, if they have an 11, change the value to 1 instead.
         # TODO: 21 make variable
-        if int(sum(users_cards)) > 21 or int(sum(computers_cards)) > 21:
-            if int(sum(users_cards)) > 21:
-                while int(sum(users_cards)) > 21:
+        if int(sum(users_hand)) > 21 or int(sum(computers_hand)) > 21:
+            if int(sum(users_hand)) > 21:
+                while int(sum(users_hand)) > 21:
                     # TODO: 11 variable
                     # TODO: move this logic to drawing logic. Research Ace logic
-                    if 11 in users_cards:
-                        ace_index = users_cards.index(11)
-                        users_cards[ace_index] = 1
+                    if 11 in users_hand:
+                        ace_index = users_hand.index(11)
+                        users_hand[ace_index] = 1
                     break
 
             # TODO: Make function
-            if int(sum(computers_cards)) > 21:
-                while int(sum(computers_cards)) > 21:
-                    if 11 in computers_cards:
-                        ace_index = computers_cards.index(11)
-                        computers_cards[ace_index] = 1
+            if int(sum(computers_hand)) > 21:
+                while int(sum(computers_hand)) > 21:
+                    if 11 in computers_hand:
+                        ace_index = computers_hand.index(11)
+                        computers_hand[ace_index] = 1
                     # TODO: Break stops continual checking of sum value
                     break
 
-                print(game_status(users_cards, computers_cards, final))
+                print(game_status(users_hand, computers_hand, not play))
                 continue
             
             # TODO: Rethink this loop
             continue
-            final = True
             break
 
-        print(game_status(users_cards, computers_cards, final))
+        print(game_status(users_hand, computers_hand, not play))
 
     # TODO: rename variable
-    calculate_score = calculate_card_values(users_cards, computers_cards)
+    calculate_score = calculate_card_values(users_hand, computers_hand)
     result = determine_winner(calculate_score)
 
-    print(game_status(users_cards, computers_cards, final))
+    print(game_status(users_hand, computers_hand, not play))
     print(f"You {result}")
 
 
