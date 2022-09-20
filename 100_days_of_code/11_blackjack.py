@@ -81,15 +81,16 @@ Computer's cards: {computer}
 
 
 # complete
-def calculate_card_values(user: list, computer: list) -> list:
-    """Calculate the score for each user and return a list."""
+def calculate_card_values(user_hand: list, computer_hand: list) -> list:
+    """Calculate the score for each user and return a list. 
+    user_Score is 0 index, computer_score is 1 index"""
     total = []
-    # TODO: Remove type casting
-    user = int(sum(user))
-    computer = int(sum(computer))
 
-    total.append(user)
-    total.append(computer)
+    user_score = sum(user_hand)
+    computer_score = sum(computer_hand)
+
+    total.append(user_score)
+    total.append(computer_score)
 
     return total
 
