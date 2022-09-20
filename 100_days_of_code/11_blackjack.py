@@ -2,6 +2,9 @@ import random
 import sys
 
 
+BREAKPOINT = 16 #computer stops drawing if hand is bigger than 16
+
+
 # complete
 def intro() -> str:
     """
@@ -133,6 +136,14 @@ def add_card_to_hand(hand: list) -> None:
     hand.append(card)
 
 
+def computer_should_draw(computers_hand: list) -> bool:
+    """
+    determines if computer should draw another card.
+    returns True if computers hand is less than the BREAKPOINT.
+    """
+    return sum(computers_hand) <= BREAKPOINT
+
+
 # TODO optimize/ refactor
 def main() -> None:
     # TODO: Move this state variables into a game object
@@ -157,9 +168,7 @@ def main() -> None:
 
         # if the user doesnt want to draw another card:
         if not play:
-            # TODO: make 16 a special variable
-            # TODO: create a function for drawing for a player
-            while int(sum(computers_hand)) <= 16:
+            while computer_should_draw(computers_hand):
                 add_card_to_hand(computers_hand)
             break
 
@@ -168,7 +177,7 @@ def main() -> None:
         add_card_to_hand(users_hand)
 
         # if computers cards add to below 16, it draws another card
-        if not int(sum(computers_hand)) > 15:
+        if computer_should_draw(computers_hand):
             add_card_to_hand(computers_hand)
 
         # if the users or computers cards add to above 21, if they have an 11, change the value to 1 instead.
