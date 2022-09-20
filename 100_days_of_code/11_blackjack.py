@@ -100,26 +100,28 @@ def determine_winner(calculate_card_values: list) -> str:
     """Based on scores, determine who won the round. Returns result as a string."""
     user = calculate_card_values[0]
     computer = calculate_card_values[1]
+    result = None
 
-    # TODO: one return if possible
-    if user > 21 and computer <= 21:
-        return "lose."
+    if user > 21:
+        result = "lose."
 
-    if user <= 21 and computer > 21:
-        return "win."
+    elif user <= 21 and computer > 21:
+        result = "win."
 
-    if user <= 21 and computer <= 21:
+    elif user <= 21 and computer <= 21:
         if user == computer:
-            return "drew."
+            result = "drew."
 
-        if user > computer:
-            return "win."
+        elif user > computer:
+            result = "win."
 
-        if user < computer:
-            return "lose."
+        elif user < computer:
+            result = "lose."
 
-    if user > 21 and computer > 21:
-        return "drew."
+    elif user > 21 and computer > 21:
+        result = "drew."
+
+    return result
 
 
 # TODO optimize/ refactor
