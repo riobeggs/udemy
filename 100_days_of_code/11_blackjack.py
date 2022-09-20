@@ -2,7 +2,8 @@ import random
 import sys
 
 
-BREAKPOINT = 16 #computer stops drawing if hand is bigger than 16
+BREAKPOINT = 16 # computer stops drawing if hand is bigger than 16
+PERFECT_SCORE = 21 # perfect blackjack score
 
 
 # complete
@@ -103,13 +104,13 @@ def determine_winner(calculate_card_values: list) -> str:
     computer = calculate_card_values[1]
     result = None
 
-    if user > 21:
+    if user > PERFECT_SCORE:
         result = "lose."
 
-    elif user <= 21 and computer > 21:
+    elif user <= PERFECT_SCORE and computer > PERFECT_SCORE:
         result = "win."
 
-    elif user <= 21 and computer <= 21:
+    elif user <= PERFECT_SCORE and computer <= PERFECT_SCORE:
         if user == computer:
             result = "drew."
 
@@ -119,7 +120,7 @@ def determine_winner(calculate_card_values: list) -> str:
         elif user < computer:
             result = "lose."
 
-    elif user > 21 and computer > 21:
+    elif user > PERFECT_SCORE and computer > PERFECT_SCORE:
         result = "drew."
 
     return result
@@ -173,18 +174,18 @@ def main() -> None:
             break
 
         # if user decides to draw another card:
-        # TODO: rename user to be more descriptive
         add_card_to_hand(users_hand)
 
         # if computers cards add to below 16, it draws another card
         if computer_should_draw(computers_hand):
             add_card_to_hand(computers_hand)
 
-        # if the users or computers cards add to above 21, if they have an 11, change the value to 1 instead.
-        # TODO: 21 make variable
-        if int(sum(users_hand)) > 21 or int(sum(computers_hand)) > 21:
-            if int(sum(users_hand)) > 21:
-                while int(sum(users_hand)) > 21:
+        # if the users or computers cards add to above PERFECT_SCORE, if they have an 11, change the value to 1 instead.
+        users_score = sum(users_hand)
+        computers_score = sum(computers_hand)
+        if users_score > PERFECT_SCORE or computers_score > PERFECT_SCORE:
+            if users_score > PERFECT_SCORE:
+                while users_score > PERFECT_SCORE:
                     # TODO: 11 variable
                     # TODO: move this logic to drawing logic. Research Ace logic
                     if 11 in users_hand:
@@ -193,8 +194,8 @@ def main() -> None:
                     break
 
             # TODO: Make function
-            if int(sum(computers_hand)) > 21:
-                while int(sum(computers_hand)) > 21:
+            if computers_score > PERFECT_SCORE:
+                while computers_score > PERFECT_SCORE:
                     if 11 in computers_hand:
                         ace_index = computers_hand.index(11)
                         computers_hand[ace_index] = 1
