@@ -130,20 +130,18 @@ def main() -> None:
     computers_hand = []
     users_hand = []
     play = True
-    # TODO: Lets try remove the final boolean and rely on play
 
     print(intro())
 
     while play:
         # if the game has just started:
         if len(users_hand) == 0:
-            for i in range(2):
-                user = draw_card()
-                users_hand.append(user)
+            for _ in range(2):
+                users_card = draw_card()
+                users_hand.append(users_card)
 
-            # TODO: rename computer to be more descriptive
-            computer = draw_card()
-            computers_hand.append(computer)
+            computers_card = draw_card()
+            computers_hand.append(computers_card)
 
             print(game_status(users_hand, computers_hand, not play))
 
@@ -155,19 +153,19 @@ def main() -> None:
             # TODO: make 16 a special variable
             # TODO: create a function for drawing for a player
             while int(sum(computers_hand)) <= 16:
-                computer = draw_card()
-                computers_hand.append(computer)
+                computers_card = draw_card()
+                computers_hand.append(computers_card)
             break
 
         # if user decides to draw another card:
         # TODO: rename user to be more descriptive
-        user = draw_card()
-        users_hand.append(user)
+        users_card = draw_card()
+        users_hand.append(users_card)
 
         # if computers cards add to below 16, it draws another card
         if not int(sum(computers_hand)) > 15:
-            computer = draw_card()
-            computers_hand.append(computer)
+            computers_card = draw_card()
+            computers_hand.append(computers_card)
 
         # if the users or computers cards add to above 21, if they have an 11, change the value to 1 instead.
         # TODO: 21 make variable
