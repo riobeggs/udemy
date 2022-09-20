@@ -43,13 +43,12 @@ def hit_or_stand() -> bool:
     """Take input from the user if they would like to hit or stand.
     
     Return a boolean indicating this."""
-    # TODO: Rename this variable
-    selection_is_not_valid = True
+    VALID_SELECTIONS = ["y", "n"]
+    selection_is_valid = False
 
-    while selection_is_not_valid:
-        selection = input("Type 'y' to get another card, type 'n' to pass: ")
-        if selection == "y" or selection == "n":
-            selection_is_not_valid = False
+    while selection_is_valid:
+        selection = input("Type 'y' to get another card, type 'n' to pass: ").lower()
+        selection_is_valid = selection in VALID_SELECTIONS
 
     if selection == "y":
         return True
