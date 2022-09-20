@@ -32,9 +32,7 @@ def draw_card() -> int:
     """Draw a card from valid card selection and return its value as an integer."""
     # TODO: consider handling ace in another way
     available_cards = [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
-
     distributed_card = random.choice(available_cards)
-
     return distributed_card
 
 
@@ -124,6 +122,17 @@ def determine_winner(calculate_card_values: list) -> str:
     return result
 
 
+def add_card_to_hand(hand: list) -> None:
+    """
+    Draws a card and adds it to a players hand. 
+
+    returns none bacause lista are mutable 
+    shorturl.at/aSV07
+    """
+    card = draw_card()
+    hand.append(card)
+
+
 # TODO optimize/ refactor
 def main() -> None:
     # TODO: Move this state variables into a game object
@@ -137,11 +146,9 @@ def main() -> None:
         # if the game has just started:
         if len(users_hand) == 0:
             for _ in range(2):
-                users_card = draw_card()
-                users_hand.append(users_card)
+                add_card_to_hand(users_hand)
 
-            computers_card = draw_card()
-            computers_hand.append(computers_card)
+            add_card_to_hand(computers_hand)
 
             print(game_status(users_hand, computers_hand, not play))
 
@@ -153,19 +160,16 @@ def main() -> None:
             # TODO: make 16 a special variable
             # TODO: create a function for drawing for a player
             while int(sum(computers_hand)) <= 16:
-                computers_card = draw_card()
-                computers_hand.append(computers_card)
+                add_card_to_hand(computers_hand)
             break
 
         # if user decides to draw another card:
         # TODO: rename user to be more descriptive
-        users_card = draw_card()
-        users_hand.append(users_card)
+        add_card_to_hand(users_hand)
 
         # if computers cards add to below 16, it draws another card
         if not int(sum(computers_hand)) > 15:
-            computers_card = draw_card()
-            computers_hand.append(computers_card)
+            add_card_to_hand(computers_hand)
 
         # if the users or computers cards add to above 21, if they have an 11, change the value to 1 instead.
         # TODO: 21 make variable
