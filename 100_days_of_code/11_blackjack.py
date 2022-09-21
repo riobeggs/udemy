@@ -45,11 +45,13 @@ def deal_starting_hands(users_hand: list, computers_hand: list) -> str:
 
 
 def user_plays(users_hand: list, computers_hand: list) -> bool:
-    while play and sum(users_hand) < PERFECT_SCORE:
+    users_turn = True
+
+    while users_turn and sum(users_hand) < PERFECT_SCORE:
         player = "Your"
         # ask if user wants to draw card:
-        play = hit_or_stand()
-        if play:
+        users_turn = hit_or_stand()
+        if users_turn:
             add_card_to_hand(users_hand)
             if not sum(users_hand) >= PERFECT_SCORE:
                 print(game_status(users_hand, computers_hand, hide_dealers_hand=True))
@@ -59,9 +61,19 @@ def user_plays(users_hand: list, computers_hand: list) -> bool:
                 print(game_status(users_hand, computers_hand, hide_dealers_hand=True))
                 continue
             # if there are no aces in hand and hand is still over PERFECT_SCORE end game.
-            game_over = True
+            users_turn = False
 
-    return game_over
+    return users_turn
+
+
+def computer_plays(users_turn: bool, users_hand: list, computers_hand: list) -> None:
+    if not users_turn:
+        while computer_should_draw(computers_hand, sum(users_hand)):
+            player = "Computer's"
+            add_card_to_hand(computers_hand)
+            computers_score = sum(computers_hand)
+            if computers_score > PERFECT_SCORE:
+                downgrade_aces(computers_hand, player)
 
 
 # completed
@@ -195,16 +207,10 @@ def main() -> None:
     users_hand = []
 
     print(intro())
+
     print(deal_starting_hands(users_hand, computers_hand))
     users_turn = user_plays(users_hand, computers_hand)
-
-    if not users_turn:
-        while computer_should_draw(computers_hand, sum(users_hand)):
-            player = "Computer's"
-            add_card_to_hand(computers_hand)
-            computers_score = sum(computers_hand)
-            if computers_score > PERFECT_SCORE:
-                downgrade_aces(computers_hand, player)
+    computer_plays(users_turn, users_hand, computers_hand)
 
     score = calculate_score(users_hand, computers_hand)
     result = determine_winner(score)
