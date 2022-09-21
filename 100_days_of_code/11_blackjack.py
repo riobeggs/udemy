@@ -2,11 +2,13 @@ import random
 import sys
 
 
-BREAKPOINT = 16 # computer stops drawing if hand is bigger than 16
-PERFECT_SCORE = 21 # perfect blackjack score
+# Constants
+BREAKPOINT = 16  # computer stops drawing if hand is bigger than 16
+PERFECT_SCORE = 21  # perfect blackjack score
+ACE = 11  # ace represented as 11 until score is over 21
 
 
-# complete
+# completed
 def intro() -> str:
     """
     Blackjack ascii art and game start.
@@ -24,26 +26,37 @@ def intro() -> str:
     | \  /|K /\  |     | '_ \| |/ _` |/ __| |/ / |/ _` |/ __| |/ /
     |  \/ | /  \ |     | |_) | | (_| | (__|   <| | (_| | (__|   < 
     `-----| \  / |     |_.__/|_|\__,_|\___|_|\_\ |\__,_|\___|_|\_\\
-        |  \/ K|                            _/ |                
-        `------'                           |__/           
+          |  \/ K|                            _/ |                
+          `------'                           |__/           
     """
 
     return logo
 
 
-# continue
+# completed
 def draw_card() -> int:
     """Draw a card from valid card selection and return its value as an integer."""
-    # TODO: consider handling ace in another way
     available_cards = [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
     distributed_card = random.choice(available_cards)
     return distributed_card
 
 
-# complete
+# completed
+def add_card_to_hand(hand: list) -> None:
+    """
+    Draws a card and adds it to a players hand.
+
+    returns none bacause lista are mutable
+    shorturl.at/aSV07
+    """
+    card = draw_card()
+    hand.append(card)
+
+
+# completed
 def hit_or_stand() -> bool:
     """Take input from the user if they would like to hit or stand.
-    
+
     Return a boolean indicating this."""
     VALID_SELECTIONS = ["y", "n"]
     selection_is_valid = False
@@ -59,10 +72,19 @@ def hit_or_stand() -> bool:
         return False
 
 
-# complete
-def game_status(user: list, computer: list, hide_dealers_hand: bool=False) -> str:
+# completed
+def computer_should_draw(computers_hand: list) -> bool:
+    """
+    determines if computer should draw another card.
+    returns True if computers hand is less than the BREAKPOINT.
+    """
+    return sum(computers_hand) <= BREAKPOINT
+
+
+# completed
+def game_status(user: list, computer: list, hide_dealers_hand: bool = False) -> str:
     """Lets the user know what the game state is.
-    
+
     Returns a string indicating the game state."""
 
     if not hide_dealers_hand:
@@ -70,16 +92,16 @@ def game_status(user: list, computer: list, hide_dealers_hand: bool=False) -> st
 Your cards: {user}
 Computer's cards: {computer}
         """
-    
+
     return f"""
 Your cards: {user}
 Computer's cards: [{computer[0]}, ?]
-        """ 
+        """
 
 
-# complete
-def calculate_card_values(user_hand: list, computer_hand: list) -> list:
-    """Calculate the score for each user and return a list. 
+# completed
+def calculate_score(user_hand: list, computer_hand: list) -> list:
+    """Calculate the score for each user and return a list.
     user_Score is 0 index, computer_score is 1 index"""
     total = []
 
@@ -92,7 +114,7 @@ def calculate_card_values(user_hand: list, computer_hand: list) -> list:
     return total
 
 
-# complete
+# completed
 def determine_winner(calculate_card_values: list) -> str:
     """Based on scores, determine who won the round. Returns result as a string."""
     user = calculate_card_values[0]
@@ -121,25 +143,6 @@ def determine_winner(calculate_card_values: list) -> str:
     return result
 
 
-def add_card_to_hand(hand: list) -> None:
-    """
-    Draws a card and adds it to a players hand. 
-
-    returns none bacause lista are mutable 
-    shorturl.at/aSV07
-    """
-    card = draw_card()
-    hand.append(card)
-
-
-def computer_should_draw(computers_hand: list) -> bool:
-    """
-    determines if computer should draw another card.
-    returns True if computers hand is less than the BREAKPOINT.
-    """
-    return sum(computers_hand) <= BREAKPOINT
-
-
 # TODO optimize/ refactor
 def main() -> None:
     # TODO: Move this state variables into a game object
@@ -165,20 +168,17 @@ def main() -> None:
             print(game_status(users_hand, computers_hand, hide_dealers_hand=True))
         users_score = sum(users_hand)
         if users_score > PERFECT_SCORE:
-                # TODO: 11 variable
-                # TODO: move this logic to drawing logic. Research Ace logic
-            if 11 in users_hand:
-                ace_index = users_hand.index(11)
+            # TODO: move this logic to drawing logic. Research Ace logic
+            if ACE in users_hand:
+                ace_index = users_hand.index(ACE)
                 users_hand[ace_index] = 1
                 # if 11 gets changed to 1 let user know
                 # TODO: functionise downgrading aces for user and computer
                 print(game_status(users_hand, computers_hand, hide_dealers_hand=True))
-            
+
             else:
+                # if there are no aces in hand and hand is still over PERFECT_SCORE end game.
                 game_over = True
-            
-            # if there are no aces in hand and hand is still over PERFECT_SCORE end game.
-        
 
     # check if player has lost
     if not game_over:
@@ -188,16 +188,14 @@ def main() -> None:
 
             computers_score = sum(computers_hand)
             if computers_score > PERFECT_SCORE:
-                if 11 in computers_hand:
-                    ace_index = computers_hand.index(11)
-                    computers_hand[ace_index] = 1                    
+                if ACE in computers_hand:
+                    ace_index = computers_hand.index(ACE)
+                    computers_hand[ace_index] = 1
 
-                    print(game_status(users_hand, computers_hand))
+        print(game_status(users_hand, computers_hand))
 
-
-    # TODO: rename variable
-    calculate_score = calculate_card_values(users_hand, computers_hand)
-    result = determine_winner(calculate_score)
+    score = calculate_score(users_hand, computers_hand)
+    result = determine_winner(score)
 
     print(f"You {result}")
 
