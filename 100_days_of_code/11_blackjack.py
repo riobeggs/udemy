@@ -44,6 +44,7 @@ def deal_starting_hands(users_hand: list, computers_hand: list) -> str:
     return status
 
 
+# completed
 def user_plays(users_hand: list, computers_hand: list) -> bool:
     users_turn = True
 
@@ -66,6 +67,7 @@ def user_plays(users_hand: list, computers_hand: list) -> bool:
     return users_turn
 
 
+# completed
 def computer_plays(users_turn: bool, users_hand: list, computers_hand: list) -> None:
     if not users_turn:
         while computer_should_draw(computers_hand, sum(users_hand)):
@@ -200,7 +202,6 @@ def determine_winner(calculate_card_values: list) -> str:
     return result
 
 
-# TODO optimize/ refactor
 def main() -> None:
     # TODO: Move this state variables into a game object
     computers_hand = []
