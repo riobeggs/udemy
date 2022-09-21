@@ -81,6 +81,20 @@ def computer_should_draw(computers_hand: list, users_score: int) -> bool:
 
 
 # completed
+def downgrade_aces(hand: list, player: str) -> bool:
+    """
+    Downgrades 11 to 1s if there are any but only hand is over 21.
+    """
+    if ACE in hand:
+        ace_index = hand.index(ACE)
+        hand[ace_index] = 1
+        print(f"\n{player} ace/ 11 got downgraded to 1.")
+        return True
+
+    return False
+
+
+# completed
 def game_status(user: list, computer: list, hide_dealers_hand: bool = False) -> str:
     """Lets the user know what the game state is.
 
@@ -160,42 +174,33 @@ def main() -> None:
     print(game_status(users_hand, computers_hand, hide_dealers_hand=True))
 
     while play and sum(users_hand) < PERFECT_SCORE:
+        player = "Your"
         # ask if user wants to draw card:
         play = hit_or_stand()
         if play:
             add_card_to_hand(users_hand)
-            print(game_status(users_hand, computers_hand, hide_dealers_hand=True))
+            if not sum(users_hand) >= PERFECT_SCORE:
+                print(game_status(users_hand, computers_hand, hide_dealers_hand=True))
         users_score = sum(users_hand)
         if users_score > PERFECT_SCORE:
-            # TODO: move this logic to drawing logic. Research Ace logic
-            if ACE in users_hand:
-                ace_index = users_hand.index(ACE)
-                users_hand[ace_index] = 1
-                # if 11 gets changed to 1 let user know
-                # TODO: functionise downgrading aces for user and computer
+            if downgrade_aces(users_hand, player):
                 print(game_status(users_hand, computers_hand, hide_dealers_hand=True))
+                continue
+            # if there are no aces in hand and hand is still over PERFECT_SCORE end game.
+            game_over = True
 
-            else:
-                # if there are no aces in hand and hand is still over PERFECT_SCORE end game.
-                game_over = True
-
-    # check if player has lost
     if not game_over:
         while computer_should_draw(computers_hand, users_score):
+            player = "Computer's"
             add_card_to_hand(computers_hand)
-            print(game_status(users_hand, computers_hand))
-
             computers_score = sum(computers_hand)
             if computers_score > PERFECT_SCORE:
-                if ACE in computers_hand:
-                    ace_index = computers_hand.index(ACE)
-                    computers_hand[ace_index] = 1
-
-        print(game_status(users_hand, computers_hand))
+                downgrade_aces(computers_hand, player)
 
     score = calculate_score(users_hand, computers_hand)
     result = determine_winner(score)
 
+    print(game_status(users_hand, computers_hand))
     print(f"You {result}")
 
 
