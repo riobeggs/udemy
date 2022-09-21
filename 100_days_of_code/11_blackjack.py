@@ -44,6 +44,26 @@ def deal_starting_hands(users_hand: list, computers_hand: list) -> str:
     return status
 
 
+def user_plays(users_hand: list, computers_hand: list) -> bool:
+    while play and sum(users_hand) < PERFECT_SCORE:
+        player = "Your"
+        # ask if user wants to draw card:
+        play = hit_or_stand()
+        if play:
+            add_card_to_hand(users_hand)
+            if not sum(users_hand) >= PERFECT_SCORE:
+                print(game_status(users_hand, computers_hand, hide_dealers_hand=True))
+        users_score = sum(users_hand)
+        if users_score > PERFECT_SCORE:
+            if downgrade_aces(users_hand, player):
+                print(game_status(users_hand, computers_hand, hide_dealers_hand=True))
+                continue
+            # if there are no aces in hand and hand is still over PERFECT_SCORE end game.
+            game_over = True
+
+    return game_over
+
+
 # completed
 def draw_card() -> int:
     """Draw a card from valid card selection and return its value as an integer."""
@@ -173,30 +193,13 @@ def main() -> None:
     # TODO: Move this state variables into a game object
     computers_hand = []
     users_hand = []
-    play = True
-    game_over = False
 
     print(intro())
     print(deal_starting_hands(users_hand, computers_hand))
+    users_turn = user_plays(users_hand, computers_hand)
 
-    while play and sum(users_hand) < PERFECT_SCORE:
-        player = "Your"
-        # ask if user wants to draw card:
-        play = hit_or_stand()
-        if play:
-            add_card_to_hand(users_hand)
-            if not sum(users_hand) >= PERFECT_SCORE:
-                print(game_status(users_hand, computers_hand, hide_dealers_hand=True))
-        users_score = sum(users_hand)
-        if users_score > PERFECT_SCORE:
-            if downgrade_aces(users_hand, player):
-                print(game_status(users_hand, computers_hand, hide_dealers_hand=True))
-                continue
-            # if there are no aces in hand and hand is still over PERFECT_SCORE end game.
-            game_over = True
-
-    if not game_over:
-        while computer_should_draw(computers_hand, users_score):
+    if not users_turn:
+        while computer_should_draw(computers_hand, sum(users_hand)):
             player = "Computer's"
             add_card_to_hand(computers_hand)
             computers_score = sum(computers_hand)
