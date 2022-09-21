@@ -33,6 +33,18 @@ def intro() -> str:
 
 
 # completed
+def deal_starting_hands(users_hand: list, computers_hand: list) -> str:
+    # deal starting hands
+    for _ in range(2):
+        add_card_to_hand(users_hand)
+        add_card_to_hand(computers_hand)
+
+    status = game_status(users_hand, computers_hand, hide_dealers_hand=True)
+
+    return status
+
+
+# completed
 def draw_card() -> int:
     """Draw a card from valid card selection and return its value as an integer."""
     available_cards = [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
@@ -113,13 +125,13 @@ Computer's cards: [{computer[0]}, ?]
 
 
 # completed
-def calculate_score(user_hand: list, computer_hand: list) -> list:
+def calculate_score(users_hand: list, computers_hand: list) -> list:
     """Calculate the score for each user and return a list.
     user_Score is 0 index, computer_score is 1 index"""
     total = []
 
-    user_score = sum(user_hand)
-    computer_score = sum(computer_hand)
+    user_score = sum(users_hand)
+    computer_score = sum(computers_hand)
 
     total.append(user_score)
     total.append(computer_score)
@@ -165,13 +177,7 @@ def main() -> None:
     game_over = False
 
     print(intro())
-
-    # deal starting hands
-    for _ in range(2):
-        add_card_to_hand(users_hand)
-        add_card_to_hand(computers_hand)
-
-    print(game_status(users_hand, computers_hand, hide_dealers_hand=True))
+    print(deal_starting_hands(users_hand, computers_hand))
 
     while play and sum(users_hand) < PERFECT_SCORE:
         player = "Your"
