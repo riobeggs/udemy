@@ -3,7 +3,6 @@ import sys
 
 
 # Constants
-BREAKPOINT = 16  # computer stops drawing if hand is bigger than 16
 PERFECT_SCORE = 21  # perfect blackjack score
 ACE = 11  # ace represented as 11 until score is over 21
 
@@ -73,12 +72,12 @@ def hit_or_stand() -> bool:
 
 
 # completed
-def computer_should_draw(computers_hand: list) -> bool:
+def computer_should_draw(computers_hand: list, users_score: int) -> bool:
     """
     determines if computer should draw another card.
     returns True if computers hand is less than the BREAKPOINT.
     """
-    return sum(computers_hand) <= BREAKPOINT
+    return sum(computers_hand) < users_score
 
 
 # completed
@@ -182,7 +181,7 @@ def main() -> None:
 
     # check if player has lost
     if not game_over:
-        while computer_should_draw(computers_hand):
+        while computer_should_draw(computers_hand, users_score):
             add_card_to_hand(computers_hand)
             print(game_status(users_hand, computers_hand))
 
