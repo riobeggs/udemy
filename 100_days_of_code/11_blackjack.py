@@ -49,7 +49,7 @@ def user_plays(users_hand: list, computers_hand: list) -> bool:
     game_over = False
 
     while not game_over and sum(users_hand) < PERFECT_SCORE:
-        player = "Your"
+        players_title = "Your"
         # ask if user wants to draw card:
         new_card = hit()
         if new_card:
@@ -59,7 +59,7 @@ def user_plays(users_hand: list, computers_hand: list) -> bool:
                 continue
         users_score = sum(users_hand)
         if users_score > PERFECT_SCORE:
-            if downgrade_aces(users_hand, player):
+            if downgrade_aces(users_hand, players_title):
                 print(game_status(users_hand, computers_hand, hide_dealers_hand=True))
                 continue
             # if there are no aces in hand and hand is still over PERFECT_SCORE end game.
@@ -72,11 +72,11 @@ def user_plays(users_hand: list, computers_hand: list) -> bool:
 # completed
 def computer_plays(users_hand: list, computers_hand: list) -> None:
     while computer_should_draw(computers_hand, sum(users_hand)):
-        player = "Computer's"
+        players_title = "Computer's"
         add_card_to_hand(computers_hand)
         computers_score = sum(computers_hand)
         if computers_score > PERFECT_SCORE:
-            downgrade_aces(computers_hand, player)
+            downgrade_aces(computers_hand, players_title)
 
 
 # completed
