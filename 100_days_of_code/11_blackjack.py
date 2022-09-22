@@ -45,7 +45,7 @@ def deal_starting_hands(users_hand: list, computers_hand: list) -> str:
 
 
 # completed
-def user_plays(users_hand: list, computers_hand: list) -> bool:
+def user_plays(users_hand: list, computers_hand: list) -> None:
     users_turn = True
 
     while users_turn and sum(users_hand) < PERFECT_SCORE:
@@ -64,18 +64,15 @@ def user_plays(users_hand: list, computers_hand: list) -> bool:
             # if there are no aces in hand and hand is still over PERFECT_SCORE end game.
             users_turn = False
 
-    return users_turn
-
 
 # completed
-def computer_plays(users_turn: bool, users_hand: list, computers_hand: list) -> None:
-    if not users_turn:
-        while computer_should_draw(computers_hand, sum(users_hand)):
-            player = "Computer's"
-            add_card_to_hand(computers_hand)
-            computers_score = sum(computers_hand)
-            if computers_score > PERFECT_SCORE:
-                downgrade_aces(computers_hand, player)
+def computer_plays(users_hand: list, computers_hand: list) -> None:
+    while computer_should_draw(computers_hand, sum(users_hand)):
+        player = "Computer's"
+        add_card_to_hand(computers_hand)
+        computers_score = sum(computers_hand)
+        if computers_score > PERFECT_SCORE:
+            downgrade_aces(computers_hand, player)
 
 
 # completed
@@ -210,8 +207,8 @@ def main() -> None:
     print(intro())
 
     print(deal_starting_hands(users_hand, computers_hand))
-    users_turn = user_plays(users_hand, computers_hand)
-    computer_plays(users_turn, users_hand, computers_hand)
+    user_plays(users_hand, computers_hand)
+    computer_plays(users_hand, computers_hand)
 
     score = calculate_score(users_hand, computers_hand)
     result = determine_winner(score)
