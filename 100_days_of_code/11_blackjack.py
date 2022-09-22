@@ -5,6 +5,7 @@ import sys
 # Constants
 PERFECT_SCORE = 21  # perfect blackjack score
 ACE = 11  # ace represented as 11 until score is over 21
+PLAY = True  # keep playing blackjack until user input == n (intro())
 
 
 def intro() -> str:
@@ -48,9 +49,9 @@ def deal_starting_hands(users_hand: list, computers_hand: list) -> str:
 
 
 def user_plays(users_hand: list, computers_hand: list) -> bool:
-    game_over = False
+    game_over = sum(users_hand) == 21
 
-    while not game_over and sum(users_hand) < PERFECT_SCORE:
+    while not game_over:
         players_title = "Your"
         # ask if user wants to draw card:
         new_card = hit()
@@ -121,7 +122,8 @@ def computer_should_draw(computers_hand: list, users_score: int) -> bool:
     determines if computer should draw another card.
     returns True if computers hand is less than the BREAKPOINT.
     """
-    return sum(computers_hand) < users_score
+
+    return sum(computers_hand) < users_score or computers_hand == [11, 11]
 
 
 def downgrade_aces(hand: list, player: str) -> bool:
@@ -137,7 +139,9 @@ def downgrade_aces(hand: list, player: str) -> bool:
     return False
 
 
-def game_status(users_hand: list, computers_hand: list, hide_dealers_hand: bool = False) -> str:
+def game_status(
+    users_hand: list, computers_hand: list, hide_dealers_hand: bool = False
+) -> str:
     """Lets the user know what the game state is.
 
     Returns a string indicating the game state."""
@@ -197,22 +201,23 @@ def determine_winner(calculate_card_values: list) -> str:
 
 
 def main() -> None:
-    print(intro())
+    while PLAY:
+        print(intro())
 
-    hands = game_variables()
-    users_hand = hands["users_hand"]
-    computers_hand = hands["computers_hand"]
+        hands = game_variables()
+        users_hand = hands["users_hand"]
+        computers_hand = hands["computers_hand"]
 
-    print(deal_starting_hands(users_hand, computers_hand))
-    game_over = user_plays(users_hand, computers_hand)
-    if not game_over:
-        computer_plays(users_hand, computers_hand)
+        print(deal_starting_hands(users_hand, computers_hand))
+        game_over = user_plays(users_hand, computers_hand)
+        if not game_over:
+            computer_plays(users_hand, computers_hand)
 
-    score = calculate_score(users_hand, computers_hand)
-    result = determine_winner(score)
+        score = calculate_score(users_hand, computers_hand)
+        result = determine_winner(score)
 
-    print(game_status(users_hand, computers_hand))
-    print(f"You {result}")
+        print(game_status(users_hand, computers_hand))
+        print(f"You {result}\n")
 
 
 if __name__ == "__main__":
