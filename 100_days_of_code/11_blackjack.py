@@ -7,7 +7,6 @@ PERFECT_SCORE = 21  # perfect blackjack score
 ACE = 11  # ace represented as 11 until score is over 21
 
 
-# completed
 def intro() -> str:
     """
     Blackjack ascii art and game start.
@@ -32,7 +31,11 @@ def intro() -> str:
     return logo
 
 
-# completed
+def game_variables() -> dict:
+    hands = {"users_hand": [], "computers_hand": []}
+    return hands
+
+
 def deal_starting_hands(users_hand: list, computers_hand: list) -> str:
     # deal starting hands
     for _ in range(2):
@@ -44,7 +47,6 @@ def deal_starting_hands(users_hand: list, computers_hand: list) -> str:
     return status
 
 
-# completed
 def user_plays(users_hand: list, computers_hand: list) -> bool:
     game_over = False
 
@@ -69,7 +71,6 @@ def user_plays(users_hand: list, computers_hand: list) -> bool:
     return game_over
 
 
-# completed
 def computer_plays(users_hand: list, computers_hand: list) -> None:
     while computer_should_draw(computers_hand, sum(users_hand)):
         players_title = "Computer's"
@@ -79,7 +80,6 @@ def computer_plays(users_hand: list, computers_hand: list) -> None:
             downgrade_aces(computers_hand, players_title)
 
 
-# completed
 def draw_card() -> int:
     """Draw a card from valid card selection and return its value as an integer."""
     available_cards = [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
@@ -87,7 +87,6 @@ def draw_card() -> int:
     return distributed_card
 
 
-# completed
 def add_card_to_hand(hand: list) -> None:
     """
     Draws a card and adds it to a players hand.
@@ -99,7 +98,6 @@ def add_card_to_hand(hand: list) -> None:
     hand.append(card)
 
 
-# completed
 def hit() -> bool:
     """Take input from the user if they would like to hit or stand.
 
@@ -118,7 +116,6 @@ def hit() -> bool:
         return False
 
 
-# completed
 def computer_should_draw(computers_hand: list, users_score: int) -> bool:
     """
     determines if computer should draw another card.
@@ -127,7 +124,6 @@ def computer_should_draw(computers_hand: list, users_score: int) -> bool:
     return sum(computers_hand) < users_score
 
 
-# completed
 def downgrade_aces(hand: list, player: str) -> bool:
     """
     Downgrades 11 to 1s if there are any but only hand is over 21.
@@ -141,25 +137,23 @@ def downgrade_aces(hand: list, player: str) -> bool:
     return False
 
 
-# completed
-def game_status(user: list, computer: list, hide_dealers_hand: bool = False) -> str:
+def game_status(users_hand: list, computers_hand: list, hide_dealers_hand: bool = False) -> str:
     """Lets the user know what the game state is.
 
     Returns a string indicating the game state."""
 
     if not hide_dealers_hand:
         return f"""
-Your cards: {user}
-Computer's cards: {computer}
+Your cards: {users_hand} Your total = {sum(users_hand)} 
+Computer's cards: {computers_hand} Computer's total = {sum(computers_hand)}
         """
 
     return f"""
-Your cards: {user}
-Computer's cards: [{computer[0]}, ?]
+Your cards: {users_hand} Your total = {sum(users_hand)}
+Computer's cards: [{computers_hand[0]}, ?] Computer's total = {computers_hand[0]}
         """
 
 
-# completed
 def calculate_score(users_hand: list, computers_hand: list) -> list:
     """Calculate the score for each user and return a list.
     user_Score is 0 index, computer_score is 1 index"""
@@ -174,7 +168,6 @@ def calculate_score(users_hand: list, computers_hand: list) -> list:
     return total
 
 
-# completed
 def determine_winner(calculate_card_values: list) -> str:
     """Based on scores, determine who won the round. Returns result as a string."""
     user = calculate_card_values[0]
@@ -204,11 +197,12 @@ def determine_winner(calculate_card_values: list) -> str:
 
 
 def main() -> None:
-    # TODO: Move this state variables into a game object
-    computers_hand = []
-    users_hand = []
-
     print(intro())
+
+    hands = game_variables()
+    users_hand = hands["users_hand"]
+    computers_hand = hands["computers_hand"]
+
     print(deal_starting_hands(users_hand, computers_hand))
     game_over = user_plays(users_hand, computers_hand)
     if not game_over:
