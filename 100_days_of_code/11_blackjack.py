@@ -45,24 +45,28 @@ def deal_starting_hands(users_hand: list, computers_hand: list) -> str:
 
 
 # completed
-def user_plays(users_hand: list, computers_hand: list) -> None:
-    users_turn = True
+def user_plays(users_hand: list, computers_hand: list) -> bool:
+    game_over = False
 
-    while users_turn and sum(users_hand) < PERFECT_SCORE:
+    while not game_over and sum(users_hand) < PERFECT_SCORE:
         player = "Your"
         # ask if user wants to draw card:
-        users_turn = hit_or_stand()
-        if users_turn:
+        new_card = hit()
+        if new_card:
             add_card_to_hand(users_hand)
             if not sum(users_hand) >= PERFECT_SCORE:
                 print(game_status(users_hand, computers_hand, hide_dealers_hand=True))
+                continue
         users_score = sum(users_hand)
         if users_score > PERFECT_SCORE:
             if downgrade_aces(users_hand, player):
                 print(game_status(users_hand, computers_hand, hide_dealers_hand=True))
                 continue
             # if there are no aces in hand and hand is still over PERFECT_SCORE end game.
-            users_turn = False
+            game_over = True
+        break
+
+    return game_over
 
 
 # completed
@@ -96,7 +100,7 @@ def add_card_to_hand(hand: list) -> None:
 
 
 # completed
-def hit_or_stand() -> bool:
+def hit() -> bool:
     """Take input from the user if they would like to hit or stand.
 
     Return a boolean indicating this."""
@@ -205,10 +209,10 @@ def main() -> None:
     users_hand = []
 
     print(intro())
-
     print(deal_starting_hands(users_hand, computers_hand))
-    user_plays(users_hand, computers_hand)
-    computer_plays(users_hand, computers_hand)
+    game_over = user_plays(users_hand, computers_hand)
+    if not game_over:
+        computer_plays(users_hand, computers_hand)
 
     score = calculate_score(users_hand, computers_hand)
     result = determine_winner(score)
