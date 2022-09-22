@@ -142,20 +142,20 @@ def downgrade_aces(hand: list, player: str) -> bool:
 
 
 # completed
-def game_status(user: list, computer: list, hide_dealers_hand: bool = False) -> str:
+def game_status(users_hand: list, computers_hand: list, hide_dealers_hand: bool = False) -> str:
     """Lets the user know what the game state is.
 
     Returns a string indicating the game state."""
 
     if not hide_dealers_hand:
         return f"""
-Your cards: {user}
-Computer's cards: {computer}
+Your cards: {users_hand} Your total = {sum(users_hand)} 
+Computer's cards: {computers_hand} Computer's total = {sum(computers_hand)}
         """
 
     return f"""
-Your cards: {user}
-Computer's cards: [{computer[0]}, ?]
+Your cards: {users_hand} Your total = {sum(users_hand)}
+Computer's cards: [{computers_hand[0]}, ?] Computer's total = {computers_hand[0]}
         """
 
 
