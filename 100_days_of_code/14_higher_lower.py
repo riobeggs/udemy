@@ -324,14 +324,77 @@ VS = """
 """
 
 
-def person_selection() -> dict:
-    person = random.choice(DATA)
+def data_selection() -> dict:
+    data = random.choice(DATA)
 
-    return person
+    return data
+
+
+def amount_of_followers(data: dict, letter: str) -> int:
+    print(
+        "Compare "
+        + letter
+        + ": "
+        + data["name"]
+        + ", a "
+        + data["description"]
+        + ", from "
+        + data["country"]
+        + "."
+    )
+
+    followers = data["follower_count"]
+
+    return followers
+
+
+def users_guess(a_followers: int, b_followers: int) -> bool:
+    available_guesses = ["A", "B"]
+    guess = None
+
+    while guess not in available_guesses:
+        guess = input("Who has more followers? Type 'A' or 'B': ").upper()
+
+    if guess == "A":
+        if a_followers >= b_followers:
+            return True
+
+    if guess == "B":
+        if b_followers >= a_followers:
+            return True
+
+    return False
+
+
+def results(score: int, correct_guess: bool = False) -> str:
+    if correct_guess:
+        return f"You're right! Current score: {score}.\n"
+
+    return f"Sorry, that's wrong. Final score: {score}.\n"
 
 
 def main() -> None:
+    game_over = False
+    score = 0
+
     print(LOGO)
+
+    while not game_over:
+        data_a = data_selection()
+        data_b = data_selection()
+
+        a_followers = amount_of_followers(data_a, "A")
+        print(VS)
+        b_followers = amount_of_followers(data_b, "B")
+
+        correct_guess = users_guess(a_followers, b_followers)
+        if correct_guess:
+            score += 1
+            print(results(score, correct_guess))
+            continue
+
+        print(results(score))
+        game_over = True
 
 
 if __name__ == "__main__":
