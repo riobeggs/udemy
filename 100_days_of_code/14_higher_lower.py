@@ -324,6 +324,12 @@ VS = """
 """
 
 
+def person_selection() -> dict:
+    person = random.choice(DATA)
+
+    return person
+
+
 def main() -> None:
     print(LOGO)
 
