@@ -42,11 +42,18 @@ class Game:
 
     def deal_cards(self) -> None:
         """Deal cards to each player in the game."""
-        raise MethodNotImplemented()
+        for player in self._players:
+            for _ in range(2):
+                player.draw_card()
 
     def deal_card(self, player: Player) -> None:
         """Deal a card to a single player."""
-        raise MethodNotImplemented()
+        assert isinstance(player, Player)
+
+        if player.is_bust():
+            return
+
+        player.draw_card()
 
     def print_game_state(self) -> None:
         """Prints the current game state of each player."""
@@ -61,6 +68,45 @@ class Game:
         """Play a game of Black Jack"""
         play = True
         while play:
+            # Deal cards
+            self.deal_cards()
+
+            # Take non dealer actions
+                # get non dealer players
+                # Ask them to act until all are standing
+            to_play = [player for player in self._players if not player.is_dealer]
+            while to_play:
+                for player in to_play:
+                    result = input(f"Draw(d) or stand(s) {player.name}?")
+                    valid = False
+                    while not valid:
+                        if not result:
+                            print("Please use `d` or `s` to enter an option.")
+                            result = input(f"Draw(d) or stand(s) {player.name}?")
+                        
+                        if result[0].lower() in ["d", "s"]:
+                            valid = True
+                            continue
+                        
+                    if result == "d":
+                        player.draw_card()
+                        if player.is_bust:
+                            print(f"{player.name} has gone bust!")
+                            # print hand
+                            
+                        self.print_game_state()
+                    elif result == "s":
+                        player.stand = True
+                        to_play.remove(player)
+
+            print("All players have acted. Dealers move.")
+            self.print_game_state()
+            
+            # Take dealer actinos
+            # deterine a winner
+            # Ask for reset
+
+            
             raise MethodNotImplemented()
 
     def restart(self):

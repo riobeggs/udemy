@@ -65,5 +65,10 @@ class Player:
         """Draw a card."""
         raise MethodNotImplemented()
 
+    @property
+    def is_dealer(self) -> bool:
+        """Check if the player is a dealer."""
+        return self._is_dealer
+
 
     
