@@ -17,6 +17,10 @@ class Player:
         self._is_dealer = is_dealer
         self._is_computer = is_computer
 
+    def __str__(self) -> str:
+        """String representation of a player."""
+        return f"Player({self._name}, is_computer={self._is_computer}, is_dealer={self._is_dealer})"
+
     @property
     def name(self) -> str:
         return self._name

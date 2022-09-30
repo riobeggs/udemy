@@ -11,7 +11,6 @@ class Game:
 
     def __init__(self, *args):
         """Things to initialize when making a game class"""
-
         for item in args:
             if isinstance(item, Player):
                 self.add_player(item)
@@ -27,9 +26,18 @@ class Game:
         
         assert isinstance(players, Iterable)
 
-        # add_player call this
+        for player in players:
+            assert isinstance(player, Player)
+            self._players.append(player)
+
+        success = True
 
         return success
+
+    def get_players(self) -> None:
+        """Prints the players in the game."""
+        for player in self._players:
+            print(player)
 
     def deal_cards(self) -> None:
         """Deal cards to each player in the game."""
