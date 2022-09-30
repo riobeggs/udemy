@@ -36,33 +36,51 @@ class Question:
         self.answer = answer
         self.question_number = question_number
         self.score = score
+        self.users_answer = None
+        self.correct = False
 
     def get_users_answer(self) -> str:
         valid_answers = ("true", "false")
-        users_answer = None
 
-        while users_answer not in valid_answers:
-            users_answer = input(
+        while self.users_answer not in valid_answers:
+            self.users_answer = input(
                 f"Q.{self.question_number}: {self.text} (True/False): "
             ).lower()
 
-        if self.answer == users_answer.capitalize():
+        return self.users_answer
+
+    def check_users_answer(self) -> bool:
+        if self.answer == self.users_answer.capitalize():
+            self.correct = True
             self.score += 1
-            print("You got it right!")
-            print(f"The correct answer was: {self.answer}.")
-            print(f"Your current score is: {self.score}/{self.question_number}.")
+            return True
+
+    def game_status(self) -> str:
+        if self.correct:
+            return f"""You got it right!
+The correct answer was: {self.answer}.
+Your current score is: {self.score}/{self.question_number}."""
+
+        return f"""That's wrong.
+The correct answer was: {self.answer}.
+Your current score is: {self.score}/{self.question_number}."""
 
 
 def main() -> None:
     question_number = 0
     score = 0
 
-    for question in QUESTION_DATA:
+    for questions in QUESTION_DATA:
         question_number += 1
-        text = question["text"]
-        answer = question["answer"]
+        text = questions["text"]
+        answer = questions["answer"]
 
-        Question(text, answer, question_number, score).get_users_answer()
+        print()
+        play = Question(text, answer, question_number, score)
+        play.get_users_answer()
+        if play.check_users_answer():
+            score += 1
+        print(play.game_status())
 
 
 if __name__ == "__main__":
