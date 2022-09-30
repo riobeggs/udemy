@@ -1,7 +1,8 @@
 from typing import Iterable, List
 
-from .player import Player
+from .constants import Game as Constants
 from .errors import MethodNotImplemented
+from .player import Player
 
 
 class Game:
@@ -54,7 +55,7 @@ class Game:
     @staticmethod
     def introduction():
         """Print information about the Black Jack game"""
-        raise MethodNotImplemented()
+        print(Constants.LOGO)
 
     def play(self):
         """Play a game of Black Jack"""
