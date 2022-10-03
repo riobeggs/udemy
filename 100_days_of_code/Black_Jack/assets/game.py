@@ -1,4 +1,4 @@
-from typing import Iterable, List
+from typing import Dict, Iterable, List
 
 from .player import Player
 from .errors import MethodNotImplemented
@@ -7,7 +7,7 @@ from .errors import MethodNotImplemented
 class Game:
     """The black jack game engine."""
 
-    _players: List[Player] = []
+    _players = {}       
 
     def __init__(self, *args):
         """Things to initialize when making a game class"""
@@ -23,7 +23,8 @@ class Game:
     def add_players(self, players: Iterable[Player]) -> bool:
         """Add multiple players to a game at once."""
         success = False
-
+        for player in players:
+            self._players[player._name] = player
         assert isinstance(players, Iterable)
 
         # add_player call this
@@ -53,8 +54,8 @@ class Game:
         | \  /|K /\  |     | '_ \| |/ _` |/ __| |/ / |/ _` |/ __| |/ /
         |  \/ | /  \ |     | |_) | | (_| | (__|   <| | (_| | (__|   < 
         `-----| \  / |     |_.__/|_|\__,_|\___|_|\_\ |\__,_|\___|_|\_\\
-            |  \/ K|                            _/ |                
-            `------'                           |__/           
+              |  \/ K|                            _/ |                
+              `------'                           |__/           
         """
 
         print(logo)
@@ -83,5 +84,11 @@ class Game:
         """Play a game of Black Jack"""
         play = True
         while play:
-            raise MethodNotImplemented()
+            new_card = Player().draw_card()
+            Player._hand.append(new_card)
+            self.print_game_state
+            if Player.is_bust():
+                play = False
+
+
         self.print_game_end_information()
