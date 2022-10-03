@@ -59,12 +59,6 @@ class Game:
 
         print(logo)
 
-    def play(self):
-        """Play a game of Black Jack"""
-        play = True
-        while play:
-            raise MethodNotImplemented()
-
     def restart(self):
         """Reset the game of Black Jack"""
         raise MethodNotImplemented()
@@ -82,4 +76,12 @@ class Game:
         Prints the winner of the game to the console.
         Might also print the sate of the game to the console.
         """
-        raise MethodNotImplemented()
+        winner = self._determine_winner()
+        print(f"{winner} wins.")
+
+    def play(self):
+        """Play a game of Black Jack"""
+        play = True
+        while play:
+            raise MethodNotImplemented()
+        self.print_game_end_information()
