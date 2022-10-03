@@ -15,16 +15,15 @@ class Game:
         for item in args:
             if isinstance(item, Player):
                 self.add_player(item)
-                
 
     def add_player(self, player: Player) -> bool:
-        """Add a player to the game. """
+        """Add a player to the game."""
         assert isinstance(player, Player)
 
     def add_players(self, players: Iterable[Player]) -> bool:
         """Add multiple players to a game at once."""
         success = False
-        
+
         assert isinstance(players, Iterable)
 
         # add_player call this
@@ -44,9 +43,21 @@ class Game:
         raise MethodNotImplemented()
 
     @staticmethod
-    def introduction():
+    def introduction() -> None:
         """Print information about the Black Jack game"""
-        raise MethodNotImplemented()
+
+        logo = """
+        .------.            _     _            _    _            _    
+        |A_  _ |.          | |   | |          | |  (_)          | |   
+        |( \/ ).-----.     | |__ | | __ _  ___| | ___  __ _  ___| | __
+        | \  /|K /\  |     | '_ \| |/ _` |/ __| |/ / |/ _` |/ __| |/ /
+        |  \/ | /  \ |     | |_) | | (_| | (__|   <| | (_| | (__|   < 
+        `-----| \  / |     |_.__/|_|\__,_|\___|_|\_\ |\__,_|\___|_|\_\\
+            |  \/ K|                            _/ |                
+            `------'                           |__/           
+        """
+
+        print(logo)
 
     def play(self):
         """Play a game of Black Jack"""
@@ -61,7 +72,7 @@ class Game:
     def _determine_winner(self) -> Player:
         """
         Internal method to determine who won the game.
-        
+
         Returns the winning player.
         """
         raise MethodNotImplemented()
