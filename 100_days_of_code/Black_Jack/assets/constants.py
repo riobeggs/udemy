@@ -8,7 +8,10 @@
 class Game:
     # Add game constants here
     PERFECT_SCORE = 21
+    ACE = 11
+    PLAY = True
 
 class Player:
     # Add player constants here
     COMPUTER_NAME = "Computer"
+    USER_NAME = "Your"
