@@ -19,6 +19,8 @@ class Player:
 
     @property
     def name(self) -> str:
+        if not self._is_computer:
+            self.name = PlayerConstants.USER_NAME
         return self._name
 
     @property
