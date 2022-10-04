@@ -1,12 +1,15 @@
+import random
 from typing import Dict, Iterable, List
+from urllib import response
 
-from .player import Player
-from .errors import MethodNotImplemented
+from assets.player import Player
+from assets.errors import MethodNotImplemented
 
 
 class Game:
     """The black jack game engine."""
-
+    
+    VALID_RESPONSES = ("hit", "stand")
     _players = {}       
 
     def __init__(self, *args):
@@ -18,30 +21,44 @@ class Game:
 
     def add_player(self, player: Player) -> bool:
         """Add a player to the game."""
-        assert isinstance(player, Player)
+        # TODO: account for 2 players with same name
+        self._players[player._name] = player
 
     def add_players(self, players: Iterable[Player]) -> bool:
         """Add multiple players to a game at once."""
         success = False
-        for player in players:
-            self._players[player._name] = player
         assert isinstance(players, Iterable)
-
-        # add_player call this
+        for player in players:
+            self.add_player(player)
 
         return success
 
     def deal_cards(self) -> None:
         """Deal cards to each player in the game."""
-        raise MethodNotImplemented()
+        for name in self._players:
+            for _ in range(2):
+                self.deal_card(name)
 
-    def deal_card(self, player: Player) -> None:
-        """Deal a card to a single player."""
-        raise MethodNotImplemented()
+        pass
+
+    def deal_card(self, name: str):
+        """deals a card to a player"""
+        player = self._players[name]
+        card = self.draw_card()
+        player.deal_card(card)
+            
+    @staticmethod
+    def draw_card() -> int:
+        """Draws a card"""
+        available_cards = [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
+        distributed_card = random.choice(available_cards)
+        return distributed_card
 
     def print_game_state(self) -> None:
         """Prints the current game state of each player."""
-        raise MethodNotImplemented()
+        for name in self._players:
+            player = self._players[name]
+            player.show_hand()
 
     @staticmethod
     def introduction() -> None:
@@ -80,15 +97,25 @@ class Game:
         winner = self._determine_winner()
         print(f"{winner} wins.")
 
+    def ask_if_hit(self) -> str:
+        """ask if player wants to hit"""
+        response = input("Would you like to stand or hit?: ").lower()
+        while response not in self.VALID_RESPONSES:
+            response = input("Would you like to stand or hit?: ").lower()
+
+        return response
+
     def play(self):
         """Play a game of Black Jack"""
         play = True
         while play:
-            new_card = Player().draw_card()
-            Player._hand.append(new_card)
-            self.print_game_state
-            if Player.is_bust():
+            self.deal_cards()
+            self.print_game_state()
+            players = [player for _, player in self._players.items() if not player._is_dealer]
+            for player in players:
+                while not player.is_bust and self.ask_if_hit() == "hit":
+                    self.deal_card(player.name)
+                    self.print_game_state()
                 play = False
-
 
         self.print_game_end_information()

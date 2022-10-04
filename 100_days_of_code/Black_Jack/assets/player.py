@@ -1,5 +1,5 @@
-from .constants import Game as GameConstants, Player as PlayerConstants
-from .errors import MethodNotImplemented
+from assets.constants import Game as GameConstants, Player as PlayerConstants
+from assets.errors import MethodNotImplemented
 import random
 
 
@@ -7,7 +7,7 @@ class Player:
     """A black jack player"""
 
     # Private attributes about a player. Expose them using properties
-    _hand = []
+    _hand = None
     _stand: bool = False
     _is_computer: bool = False
     _is_dealer = False
@@ -20,6 +20,7 @@ class Player:
         self._name = name
         self._is_dealer = is_dealer
         self._is_computer = is_computer
+        self._hand = []
 
     @property
     def name(self) -> str:
@@ -62,8 +63,13 @@ class Player:
         score = sum(self._hand)
         return score
 
-    def draw_card(self) -> int:
+    def deal_card(self, card: int):
         """Draw a card."""
-        available_cards = [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
-        distributed_card = random.choice(available_cards)
-        return distributed_card
+        self._hand.append(card)
+
+    def show_hand(self):
+        """prints players name and hand"""
+        if not self._is_dealer:
+            print(f"{self._name} hand = {self._hand}")
+        else:
+            print(f"{self._name} hand = [{self._hand[0]}, ?]")
