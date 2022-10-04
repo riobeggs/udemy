@@ -11,7 +11,7 @@ def main():
     players = [computer, player]
     game = Game()
     game.add_players(players)
-    game.introduction()
+    Game.introduction()
     game.play()
 
 if __name__ == "__main__":
